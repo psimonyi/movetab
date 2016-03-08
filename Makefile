@@ -3,8 +3,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 name := movetab
-locale := locale/*/$(name).properties
-content := main.js style.css $(locale)
+locale := locale/*/$(name).properties locale/*/options.dtd
+content := main.js options.xul style.css $(locale)
 icons := icon48.png icon64.png
 
 $(name).xpi: install.rdf chrome.manifest bootstrap.js $(content) $(icons)

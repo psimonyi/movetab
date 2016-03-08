@@ -1,0 +1,2 @@
+<!ENTITY options.before.label "Insert before marker tab">
+<!ENTITY options.before.desc "Normally, tabs are moved to after the marker tab (such as a New Tab).">

@@ -13,6 +13,7 @@ const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const MENU_ID = 'movetab_menu';
 const POPUP_ID = 'movetab_popup';
 const MARKER_SEPARATOR_ID = 'movetab_landmark_separator';
+const PREF_BRANCH = 'extensions.movetab.';
 
 eachWindow(addMoveMenu, removeMoveMenu);
 
@@ -65,17 +66,26 @@ function updateSubmenu(event) {
     }
 
     let thisIndex = window.TabContextMenu.contextTab._tPos;
+    let after = getBoolPref('insertbefore', false) ? 0 : 1;
     separator.hidden = true;
 
     for (let tab of window.gBrowser.tabs) {
         if (isMarkerTab(tab)) {
             separator.hidden = false;
             let item = document.createElementNS(NS_XUL, 'menuitem');
-            let index = tab._tPos - (thisIndex < tab._tPos ? 1 : 0);
+            let index = tab._tPos - (thisIndex < tab._tPos ? 1 : 0) + after;
             item.setAttribute('label', markerLabel(tab.label));
             item.addEventListener('command', moveTab.bind(null, index));
             popup.appendChild(item);
         }
+    }
+}
+
+function getBoolPref(name, defaultValue) {
+    try {
+        return Services.prefs.getBoolPref(PREF_BRANCH + name);
+    } catch (e) {
+        return defaultValue;
     }
 }
 
@@ -86,7 +96,8 @@ function isMarkerTab(tab) {
 }
 
 function markerLabel(s) {
-    return text('before.label').replace('%s', _=>s);
+    let relative = getBoolPref('insertbefore', false) ? 'before' : 'after';
+    return text(relative + '.label').replace('%s', _=>s);
 }
 
 function moveTab(index, event) {
