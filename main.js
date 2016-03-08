@@ -12,6 +12,7 @@
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const MENU_ID = 'movetab_menu';
 const POPUP_ID = 'movetab_popup';
+const MARKER_SEPARATOR_ID = 'movetab_landmark_separator';
 
 eachWindow(addMoveMenu, removeMoveMenu);
 
@@ -28,6 +29,18 @@ function addMoveMenu(aWin) {
     popup.addEventListener('popupshowing', updateSubmenu);
     menu.appendChild(popup);
 
+    for (let end of ['left', 'right']) {
+        let item = document.createElementNS(NS_XUL, 'menuitem');
+        item.setAttribute('label', text(end + '.label'));
+        item.setAttribute('accesskey', text(end + '.accesskey'));
+        item.addEventListener('command', moveTab.bind(null, end));
+        popup.appendChild(item);
+    }
+
+    let separator = document.createElementNS(NS_XUL, 'menuseparator');
+    separator.setAttribute('id', MARKER_SEPARATOR_ID);
+    popup.appendChild(separator);
+
     let tabContextMenu = document.getElementById('tabContextMenu');
     let tabMoveItem = document.getElementById('context_openTabInWindow');
     tabContextMenu.insertBefore(menu, tabMoveItem);
@@ -41,37 +54,46 @@ function removeMoveMenu(aWin) {
 
 function updateSubmenu(event) {
     if (event.target != event.currentTarget) return;
-    let document = event.target.ownerDocument;
-    let popup = document.getElementById(POPUP_ID);
 
-    while (popup.firstElementChild != null) {
-        popup.removeChild(popup.firstElementChild);
+    let document = event.target.ownerDocument;
+    let window = document.defaultView;
+    let popup = document.getElementById(POPUP_ID);
+    let separator = document.getElementById(MARKER_SEPARATOR_ID);
+
+    while (separator.nextElementSibling != null) {
+        popup.removeChild(separator.nextElementSibling);
     }
 
-    let left = document.createElementNS(NS_XUL, 'menuitem');
-    left.setAttribute('label', text('left.label'));
-    left.setAttribute('accesskey', text('left.accesskey'));
-    left.addEventListener('command', moveTabLeft);
-    popup.appendChild(left);
+    let thisIndex = window.TabContextMenu.contextTab._tPos;
+    separator.hidden = true;
 
-    let right = document.createElementNS(NS_XUL, 'menuitem');
-    right.setAttribute('label', text('right.label'));
-    right.setAttribute('accesskey', text('right.accesskey'));
-    right.addEventListener('command', moveTabRight);
-    popup.appendChild(right);
+    for (let tab of window.gBrowser.tabs) {
+        if (isMarkerTab(tab)) {
+            separator.hidden = false;
+            let item = document.createElementNS(NS_XUL, 'menuitem');
+            let index = tab._tPos - (thisIndex < tab._tPos ? 1 : 0);
+            item.setAttribute('label', markerLabel(tab.label));
+            item.addEventListener('command', moveTab.bind(null, index));
+            popup.appendChild(item);
+        }
+    }
 }
 
-function moveTabLeft(event) {
+function isMarkerTab(tab) {
+    /* Marker tabs help us find places near the middle of the tab list.  This
+     * could be a lot smarter, but for now it's just all about:* tabs. */
+    return tab.linkedBrowser.currentURI.scheme == 'about';
+}
+
+function markerLabel(s) {
+    return text('before.label').replace('%s', _=>s);
+}
+
+function moveTab(index, event) {
     let window = event.target.ownerDocument.defaultView;
     let tab = window.TabContextMenu.contextTab;
     let gBrowser = window.gBrowser;
-    gBrowser.moveTabTo(tab, 0);
-}
-
-function moveTabRight(event) {
-    let window = event.target.ownerDocument.defaultView;
-    let tab = window.TabContextMenu.contextTab;
-    let gBrowser = window.gBrowser;
-    let index = gBrowser.tabs.length - 1;
+    if (index == 'left') index = 0;
+    if (index == 'right') index = gBrowser.tabs.length - 1;
     gBrowser.moveTabTo(tab, index);
 }
