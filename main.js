@@ -13,7 +13,7 @@ const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const MENU_ID = 'movetab_menu';
 const POPUP_ID = 'movetab_popup';
 const MARKER_SEPARATOR_ID = 'movetab_landmark_separator';
-const PREF_BRANCH = 'extensions.movetab.';
+const prefs = Services.prefs.getBranch('extensions.movetab.')
 
 eachWindow(addMoveMenu, removeMoveMenu);
 
@@ -66,7 +66,7 @@ function updateSubmenu(event) {
     }
 
     let thisIndex = window.TabContextMenu.contextTab._tPos;
-    let after = getBoolPref('insertbefore', false) ? 0 : 1;
+    let after = prefs.getBoolPref('insertbefore') ? 0 : 1;
     separator.hidden = true;
 
     for (let tab of window.gBrowser.tabs) {
@@ -81,13 +81,6 @@ function updateSubmenu(event) {
     }
 }
 
-function getBoolPref(name, defaultValue) {
-    try {
-        return Services.prefs.getBoolPref(PREF_BRANCH + name);
-    } catch (e) {
-        return defaultValue;
-    }
-}
 
 function isMarkerTab(tab) {
     /* Marker tabs help us find places near the middle of the tab list.  This
@@ -96,7 +89,7 @@ function isMarkerTab(tab) {
 }
 
 function markerLabel(s) {
-    let relative = getBoolPref('insertbefore', false) ? 'before' : 'after';
+    let relative = prefs.getBoolPref('insertbefore') ? 'before' : 'after';
     return text(relative + '.label').replace('%s', _=>s);
 }
 

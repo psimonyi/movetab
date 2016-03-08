@@ -14,6 +14,7 @@ let _undoers = [];
 
 function startup(data, reason) {
     chromeStylesheet('chrome://movetab/skin/style.css');
+    loadDefaultPrefs('chrome://movetab/content/prefs.js');
     let text = l10n('chrome://movetab/locale/movetab.properties');
     let scope = { text: text };
 
@@ -92,6 +93,33 @@ function l10n(url) {
         if (args.length == 0) return bundle.GetStringFromName(key);
         return bundle.formatStringFromName(key, args, args.length);
     };
+}
+
+/* Load default preferences from the URL.  The file should be like the usual
+ * prefs.js.  Also registers cleanup functions to remove the defaults.
+ * Workaround for bug 564675, based on the MDN article https://developer.
+ * mozilla.org/en-US/Add-ons/How_to_convert_an_overlay_extension_to_restartless
+ * #Step_4_Manually_handle_default_preferences
+ */
+function loadDefaultPrefs(url) {
+    let defaultBranch = Services.prefs.getDefaultBranch('');
+
+    // Note that the sample code at MDN does special handling for strings which
+    // I don't do here because I'm not sure that it's needed any more.
+    function prefType(v) {
+        if (typeof v == 'boolean') return 'setBoolPref';
+        if (typeof v == 'number') return 'setIntPref';
+        return 'setStringPref';
+    }
+
+    let scope = {
+        pref: function (name, value) {
+            defaultBranch[prefType(value)](name, value);
+            toUndo(_=> defaultBranch.deleteBranch(name));
+        },
+    };
+
+    Services.scriptloader.loadSubScript(url, scope);
 }
 
 /* Runs fn in each existing browser window and each browser window opened from
