@@ -17,8 +17,14 @@ function startup(data, reason) {
     let text = l10n('chrome://movetab/locale/movetab.properties');
     let scope = { text: text };
 
-    Services.scriptloader.loadSubScript(
-            'chrome://movetab/content/main.js', scope);
+    try {
+        Services.scriptloader.loadSubScript(
+                'chrome://movetab/content/main.js', scope);
+    } catch (e) {
+        // Firefox EM makes exceptions in bootstrap code too quiet.
+        Cu.reportError(e);
+        throw e;
+    }
 }
 
 function shutdown(data, reason) {
