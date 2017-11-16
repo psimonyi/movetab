@@ -7,10 +7,11 @@
 
 'use strict';
 
-const MENU_ID = 'movetab_menu';
+const MID_TOP = 'movetab_menu';
+const MID_NEW_WINDOW = 'newwindow';
 
 browser.menus.create({
-    id: MENU_ID,
+    id: MID_TOP,
     title: browser.i18n.getMessage("menu.label"),
     contexts: ['tab'],
 });
@@ -18,21 +19,32 @@ browser.menus.create({
 for (let end of ['left', 'right']) {
     browser.menus.create({
         id: end,
+        parentId: MID_TOP,
+        title: browser.i18n.getMessage(`${end}.label`),
         icons: {
             "16": `${end}.svg`,
         },
-        parentId: MENU_ID,
-        title: browser.i18n.getMessage(`${end}.label`),
     });
 }
 
 browser.menus.create({
-    parentId: MENU_ID,
+    id: MID_NEW_WINDOW,
+    parentId: MID_TOP,
+    title: browser.i18n.getMessage('newwindow.label'),
+    icons: {
+        "16": 'photon-window-new-16.svg',
+    },
+});
+
+browser.menus.create({
+    parentId: MID_TOP,
     type: "separator",
 });
 
 browser.menus.onClicked.addListener(function (info, tab) {
-    if (info.menuItemId === 'right') {
+    if (info.menuItemId === MID_NEW_WINDOW) {
+        browser.windows.create({tabId: tab.id});
+    } else if (info.menuItemId === 'right') {
         browser.tabs.move(tab.id, {index: -1});
     } else if (info.menuItemId === 'left') {
         browser.tabs.move(tab.id, {index: 0});

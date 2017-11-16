@@ -4,5 +4,6 @@
     "right.label": {"message": "Far Right"},
     "before.label": {"message": "Before \"%s\""},
     "after.label": {"message": "After \"%s\""},
+    "newwindow.label": {"message": "New Window"},
     "empty": {"message": "JSON is dumb"}
 }
