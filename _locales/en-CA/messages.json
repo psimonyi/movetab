@@ -5,5 +5,6 @@
     "before.label": {"message": "Before \"%s\""},
     "after.label": {"message": "After \"%s\""},
     "newwindow.label": {"message": "New Window"},
+    "to.window.pattern": {"message": "\"$1\""},
     "empty": {"message": "JSON is dumb"}
 }

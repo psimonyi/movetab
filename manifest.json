@@ -25,7 +25,8 @@
     "name": "Move Tab",
 
     "permissions": [
-        "menus"
+        "menus",
+        "tabs"
     ],
 
     "version": "2"
