@@ -1,0 +1,33 @@
+{
+    "applications": {
+        "gecko": {
+            "id": "movetab@ns.petersimonyi.ca"
+        }
+    },
+
+    "author": "Peter Simonyi",
+
+    "background": {
+        "scripts": ["main.js"]
+    },
+    
+    "default_locale": "en_CA",
+
+    "description": "Move tabs with the context menu.",
+
+    "icons": {
+        "48": "icon48.png",
+        "64": "icon64.png"
+    },
+
+    "manifest_version": 2,
+
+    "name": "Move Tab",
+
+    "permissions": [
+        "menus"
+    ],
+
+    "version": "2"
+}
+

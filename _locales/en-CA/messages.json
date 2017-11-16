@@ -1,0 +1,8 @@
+{
+    "menu.label": {"message": "Move Tab"},
+    "left.label": {"message": "Far Left"},
+    "right.label": {"message": "Far Right"},
+    "before.label": {"message": "Before \"%s\""},
+    "after.label": {"message": "After \"%s\""},
+    "empty": {"message": "JSON is dumb"}
+}
