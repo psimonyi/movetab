@@ -18,10 +18,9 @@ browser.menus.create({
 for (let end of ['left', 'right']) {
     browser.menus.create({
         id: end,
-        /*icons: {
-            "16": `${end}.png`,
-            "32": `${end}32.png`,
-        },*/
+        icons: {
+            "16": `${end}.svg`,
+        },
         parentId: MENU_ID,
         title: browser.i18n.getMessage(`${end}.label`),
     });
