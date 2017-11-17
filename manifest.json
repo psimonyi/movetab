@@ -16,8 +16,9 @@
     "description": "Move tabs with the context menu.",
 
     "icons": {
-        "48": "icon48.png",
-        "64": "icon64.png"
+        "48": "teleport.svg",
+        "64": "teleport.svg",
+        "96": "teleport.svg"
     },
 
     "manifest_version": 2,
