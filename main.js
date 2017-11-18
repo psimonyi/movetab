@@ -85,6 +85,13 @@ browser.menus.onClicked.addListener(function (info, tab) {
     } else if (info.menuItemId.startsWith(MID_PREFIX_WINDOW)) {
         const windowId = JSON.parse(
             info.menuItemId.slice(MID_PREFIX_WINDOW.length));
-        browser.tabs.move(tab.id, {windowId: windowId, index: -1});
+        const p = browser.tabs.move(tab.id, {windowId: windowId, index: -1});
+        if (tab.active) {
+            // Keep this tab as the active tab after the move.
+            p.then(() => {
+                browser.tabs.update(tab.id, {active: true});
+                browser.windows.update(windowId, {focused: true});
+            });
+        }
     }
 });
