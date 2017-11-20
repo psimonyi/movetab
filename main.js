@@ -133,6 +133,15 @@ browser.tabs.onCreated.addListener(async function (tab) {
     }
 });
 
+// Keep the mark visible when the tab's title changes (e.g. because the user
+// navigated or the page updated it itself).
+browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
+    if (marks.has(tabId) && 'title' in updates) {
+        browser.tabs.executeScript(tab.id,
+            {file: 'addMark.js', runAt: 'document_start'});
+    }
+});
+
 browser.menus.onClicked.addListener(function (info, tab) {
     if (info.menuItemId === MID_MARK) {
         // Toggle whether this tab is marked.
