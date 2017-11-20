@@ -165,7 +165,12 @@ browser.menus.onClicked.addListener(function (info, tab) {
         const destTabId = JSON.parse(
             info.menuItemId.slice(MID_PREFIX_TAB.length));
         browser.tabs.get(destTabId).then(destTab => {
-            moveTab(tab, destTab.windowId, destTab.index + 1);
+            let offset = 1;
+            if (destTab.windowId === tab.windowId
+                && tab.index < destTab.index) {
+                offset = 0;
+            }
+            moveTab(tab, destTab.windowId, destTab.index + offset);
         });
     }
 });
