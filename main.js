@@ -98,6 +98,9 @@ async function makeMenu() {
         id: MID_MARK,
         parentId: MID_TOP,
         title: browser.i18n.getMessage('mark.label'),
+        icons: {
+            "16": 'mark.svg',
+        },
     });
 }
 
