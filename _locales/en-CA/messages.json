@@ -2,9 +2,10 @@
     "menu.label": {"message": "Move Tab"},
     "left.label": {"message": "Far Left"},
     "right.label": {"message": "Far Right"},
-    "before.label": {"message": "Before \"%s\""},
-    "after.label": {"message": "After \"%s\""},
     "newwindow.label": {"message": "New Window"},
     "to.window.pattern": {"message": "\"$1\""},
+    "before.tab.pattern": {"message": "Before \"$1\""},
+    "after.tab.pattern": {"message": "After \"$1\""},
+    "mark.label": {"message": "Toggle Tab Target"},
     "empty": {"message": "JSON is dumb"}
 }

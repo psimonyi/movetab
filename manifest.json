@@ -26,10 +26,11 @@
     "name": "Move Tab",
 
     "permissions": [
+        "<all_urls>",
         "menus",
+        "sessions",
         "tabs"
     ],
 
     "version": "2"
 }
-
