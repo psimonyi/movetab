@@ -23,7 +23,7 @@
 
     "manifest_version": 2,
 
-    "name": "Move Tab",
+    "name": "Tab Teleporter",
 
     "permissions": [
         "<all_urls>",
