@@ -134,11 +134,13 @@ browser.tabs.onCreated.addListener(async function (tab) {
 });
 
 // Keep the mark visible when the tab's title changes (e.g. because the user
-// navigated or the page updated it itself).
+// navigated or the page updated it itself).  Also keep the menu up to date.
 browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
     if (marks.has(tabId) && 'title' in updates) {
         browser.tabs.executeScript(tab.id,
             {file: 'addMark.js', runAt: 'document_start'});
+        browser.menus.update(MID_PREFIX_TAB + JSON.stringify(tab.id),
+            {title: browser.i18n.getMessage('after.tab.pattern', tab.title)});
     }
 });
 
