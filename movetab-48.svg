@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="96"
+   height="96"
+   viewBox="0 0 48 48"
+   id="svg1"
+   version="1.1"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="movetab-48.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="375"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     gridtolerance="10"
+     objecttolerance="10"
+     guidetolerance="10"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-text-baseline="true"
+     inkscape:snap-page="true"
+     showborder="true"
+     inkscape:pagecheckerboard="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid7"
+       spacingx="1"
+       spacingy="1"
+       empspacing="8" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid9"
+       empspacing="8"
+       originx="0.5"
+       originy="0.5"
+       dotted="true"
+       color="#3f48ff"
+       opacity="0.49803922"
+       empcolor="#3f3fff"
+       empopacity="0.59607843" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+        <cc:license
+           rdf:resource="https://www.mozilla.org/en-US/MPL/2.0/" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round"
+       d="m 34,26 3.5,-3.5 3.5,3.5"
+       id="path820"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px"
+       d="m 37.5,22.5 v 3"
+       id="path845"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#000000"
+       id="rect15"
+       width="12"
+       height="10"
+       x="17"
+       y="14"
+       rx="2"
+       ry="2" />
+    <rect
+       style="fill:#000000"
+       id="rect17"
+       width="17"
+       height="2"
+       x="15"
+       y="22"
+       rx="1"
+       ry="1" />
+    <rect
+       style="fill:#000000"
+       id="rect831"
+       width="5"
+       height="2"
+       x="42"
+       y="22"
+       rx="1"
+       ry="1" />
+    <path
+       style="fill:#000000;stroke-width:1"
+       d="m 33,14 c -1.108,0 -2,0.892 -2,2 v 7 h 1 v -7 c 0,-0.554 0.446,-1 1,-1 h 8 c 0.554,0 1,0.446 1,1 v 7 h 1 v -7 c 0,-1.108 -0.892,-2 -2,-2 z"
+       id="rect3720"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssccssssccsss" />
+    <rect
+       ry="2"
+       rx="2"
+       y="14"
+       x="3"
+       height="10"
+       width="12"
+       id="rect16"
+       style="fill:#000000" />
+    <rect
+       ry="1"
+       rx="1"
+       y="22"
+       x="1"
+       height="2"
+       width="17"
+       id="rect18"
+       style="fill:#000000" />
+    <path
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       d="m 37.5,25 c 0,6.5 -8.904551,8.467612 -14.5,8.5 -5.442187,0.06184 -14.5,-2 -14.5,-8.5"
+       id="path20"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+  </g>
+</svg>

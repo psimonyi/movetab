@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64"
+   height="64"
+   viewBox="0 0 32 32"
+   id="svg1"
+   version="1.1"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="movetab-32.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="375"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     gridtolerance="10"
+     objecttolerance="10"
+     guidetolerance="10"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-text-baseline="true"
+     inkscape:snap-page="true"
+     showborder="true"
+     inkscape:pagecheckerboard="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid7"
+       spacingx="1"
+       spacingy="1"
+       empspacing="8" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid9"
+       empspacing="8"
+       originx="0.5"
+       originy="0.5"
+       dotted="true"
+       color="#3f48ff"
+       opacity="0.49803922"
+       empcolor="#3f3fff"
+       empopacity="0.59607843" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+        <cc:license
+           rdf:resource="https://www.mozilla.org/en-US/MPL/2.0/" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-16)">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round"
+       d="m 19.5,34.5 3,-3 3,3"
+       id="path820"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px"
+       d="m 22.5,31.5 v 3"
+       id="path845"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#000000"
+       id="rect15"
+       width="12"
+       height="10"
+       x="2"
+       y="23"
+       rx="2"
+       ry="2" />
+    <rect
+       style="fill:#000000"
+       id="rect17"
+       width="17"
+       height="2"
+       x="0"
+       y="31"
+       rx="1"
+       ry="1" />
+    <rect
+       style="fill:#000000"
+       id="rect831"
+       width="5"
+       height="2"
+       x="27"
+       y="31"
+       rx="1"
+       ry="1" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round"
+       id="path848"
+       sodipodi:type="arc"
+       sodipodi:cx="15"
+       sodipodi:cy="34.5"
+       sodipodi:rx="7.5"
+       sodipodi:ry="7.5"
+       sodipodi:start="0"
+       sodipodi:end="3.1415927"
+       sodipodi:open="true"
+       d="m 22.5,34.5 a 7.5,7.5 0 0 1 -3.75,6.495191 7.5,7.5 0 0 1 -7.5,-10e-7 7.5,7.5 0 0 1 -3.75,-6.49519" />
+    <path
+       style="fill:#000000;stroke-width:2"
+       d="m 36,14 c -2.216,0 -4,1.784 -4,4 v 14 h 2 v -14 c 0,-1.108 0.892,-2 2,-2 h 16 c 1.108,0 2,0.892 2,2 v 14 h 2 v -14 c 0,-2.216 -1.784,-4 -4,-4 z"
+       id="rect3720"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssccssssccsss"
+       transform="matrix(0.5,0,0,0.5,0,16)" />
+  </g>
+</svg>

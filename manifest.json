@@ -16,9 +16,11 @@
     "description": "Move tabs with the context menu.",
 
     "icons": {
-        "48": "teleport.svg",
-        "64": "teleport.svg",
-        "96": "teleport.svg"
+        "16": "movetab-16.svg",
+        "32": "movetab-32.svg",
+        "64": "movetab-32.svg",
+        "48": "movetab-48.svg",
+        "96": "movetab-48.svg"
     },
 
     "manifest_version": 2,
