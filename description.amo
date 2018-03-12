@@ -1,18 +1,18 @@
 Dragging tabs around can be a drag.  Move tabs with the context menu instead.
 
-Features:
+<b>Features:</b>
 <ul>
 <li>Move to the left/right end of the tab strip
 <li>Move to an existing window or create a new one
 <li>Mark a destination tab, then move tabs beside it
 </ul>
 
-Permissions and privacy:
-<b>Access browser tabs</b> is required for obvious reasons.
-<b>Access recently closed tabs</b> lets tabs you mark as teleport targets remain marked after undo-close-tab and after restarting Firefox if you have enabled the preference "When Firefox starts: Show your windows and tabs from last time".
-<b>Access your data for all websites</b> is a technical workaround for limitations in the WebExtensions API.  There is no way to visually mark individual tabs, so this extension marks tabs by updating the page <code>&lt;title&gt;</code> in order to change the tab title.  No other changes are made to websites, and it does not read information from any websites.
+<b>Permissions and privacy:</b>
+<i>Access browser tabs</i> is required for obvious reasons.
+<i>Access recently closed tabs</i> lets tabs you mark as teleport targets remain marked after undo-close-tab and after restarting Firefox if you have enabled the preference "When Firefox starts: Show your windows and tabs from last time".
+<i>Access your data for all websites</i> is a technical workaround for limitations in the WebExtensions API.  There is no way to visually mark individual tabs, so this extension marks tabs by updating the page <code>&lt;title&gt;</code> in order to change the tab title.  No other changes are made to websites, and it does not read information from any websites.
 
 Note: The workaround for marking tabs described above means that certain tabs will not appear to be marked.  This includes special Firefox pages such as Preferences and the Add-ons Manager, and certain sensitive Mozilla domains such as addons.mozilla.org.
 
-About your rights:
+<b>About your rights:</b>
 This extension is Free Software, made available under the terms of the <a href="https://www.mozilla.org/MPL/2.0/">Mozilla Public License, version 2.0</a>. You can download the source code from the <a href="https://github.com/psimonyi/movetab">repository on GitHub</a>.
