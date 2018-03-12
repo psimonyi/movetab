@@ -12,5 +12,5 @@ files := addMark.js left.svg main.js manifest.json mark.svg movetab-16.svg \
 movetab.xpi: $(files)
 	zip --filesync --quiet --recurse-paths $@ $^
 
-icon%.png: $(name).svg
-	inkscape --export-png=$@ --export-width=$* --file=$<
+icon64.png: movetab-32.svg
+	inkscape --export-png=$@ --export-width=64 --file=$<
