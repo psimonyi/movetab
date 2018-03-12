@@ -15,6 +15,8 @@
 
     "description": "Move tabs with the context menu.",
 
+    "homepage_url": "https://github.com/psimonyi/movetab",
+
     "icons": {
         "16": "movetab-16.svg",
         "32": "movetab-32.svg",
@@ -34,5 +36,5 @@
         "tabs"
     ],
 
-    "version": "2"
+    "version": "3"
 }
