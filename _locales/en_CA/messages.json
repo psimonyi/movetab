@@ -1,13 +1,13 @@
 {
-    "menu.label": {"message": "Move Tab"},
-    "left.label": {"message": "Far Left"},
-    "right.label": {"message": "Far Right"},
-    "newwindow.label": {"message": "New Window"},
-    "to.window.pattern": {"message": "\"$1\""},
-    "before.tab.pattern": {"message": "Before \"$1\""},
-    "after.tab.pattern": {"message": "After \"$1\""},
-    "mark.label": {"message": "Toggle Teleport Target"},
-    "mark.set.label": {"message": "Set as Teleport Target"},
-    "mark.unset.label": {"message": "Remove Teleport Target"},
+    "menu@label": {"message": "Move Tab"},
+    "left@label": {"message": "Far Left"},
+    "right@label": {"message": "Far Right"},
+    "new_window@label": {"message": "New Window"},
+    "to_window@pattern": {"message": "\"$1\""},
+    "before_tab@pattern": {"message": "Before \"$1\""},
+    "after_tab@pattern": {"message": "After \"$1\""},
+    "mark@label": {"message": "Toggle Teleport Target"},
+    "mark_set@label": {"message": "Set as Teleport Target"},
+    "mark_unset@label": {"message": "Remove Teleport Target"},
     "empty": {"message": "JSON is dumb"}
 }

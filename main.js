@@ -22,7 +22,7 @@ async function makeMenu() {
 
     browser.menus.create({
         id: MID_TOP,
-        title: browser.i18n.getMessage("menu.label"),
+        title: browser.i18n.getMessage("menu@label"),
         contexts: ['tab'],
     });
 
@@ -30,7 +30,7 @@ async function makeMenu() {
         browser.menus.create({
             id: end,
             parentId: MID_TOP,
-            title: browser.i18n.getMessage(`${end}.label`),
+            title: browser.i18n.getMessage(`${end}@label`),
             icons: {
                 "16": `${end}.svg`,
             },
@@ -49,7 +49,7 @@ async function makeMenu() {
         browser.menus.create({
             id: MID_PREFIX_TAB + JSON.stringify(tab.id),
             parentId: MID_TOP,
-            title: browser.i18n.getMessage('after.tab.pattern', tab.title),
+            title: browser.i18n.getMessage('after_tab@pattern', tab.title),
         });
     }
 
@@ -65,7 +65,7 @@ async function makeMenu() {
         browser.menus.create({
             id: MID_PREFIX_WINDOW + JSON.stringify(win.id),
             parentId: MID_TOP,
-            title: browser.i18n.getMessage('to.window.pattern', win.title),
+            title: browser.i18n.getMessage('to_window@pattern', win.title),
             icons: {
                 "16": 'photon-window-16.svg',
             },
@@ -75,7 +75,7 @@ async function makeMenu() {
             browser.menus.create({
                 id: MID_PREFIX_TAB + JSON.stringify(tab.id),
                 parentId: MID_TOP,
-                title: browser.i18n.getMessage('after.tab.pattern', tab.title),
+                title: browser.i18n.getMessage('after_tab@pattern', tab.title),
             });
         }
     }
@@ -83,7 +83,7 @@ async function makeMenu() {
     browser.menus.create({
         id: MID_NEW_WINDOW,
         parentId: MID_TOP,
-        title: browser.i18n.getMessage('newwindow.label'),
+        title: browser.i18n.getMessage('new_window@label'),
         icons: {
             "16": 'photon-window-new-16.svg',
         },
@@ -97,7 +97,7 @@ async function makeMenu() {
     browser.menus.create({
         id: MID_MARK,
         parentId: MID_TOP,
-        title: browser.i18n.getMessage('mark.label'),
+        title: browser.i18n.getMessage('mark@label'),
         icons: {
             "16": 'mark.svg',
         },
@@ -140,7 +140,7 @@ browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
         browser.tabs.executeScript(tab.id,
             {file: 'addMark.js', runAt: 'document_start'});
         browser.menus.update(MID_PREFIX_TAB + JSON.stringify(tab.id),
-            {title: browser.i18n.getMessage('after.tab.pattern', tab.title)});
+            {title: browser.i18n.getMessage('after_tab@pattern', tab.title)});
     }
 });
 
@@ -153,10 +153,10 @@ if (browser.menus.onShown && browser.menus.onHidden) {
     browser.menus.onShown.addListener(function (info, tab) {
         let title, icons;
         if (marks.has(tab.id)) {
-            title = browser.i18n.getMessage('mark.unset.label');
+            title = browser.i18n.getMessage('mark_unset@label');
             icons = {'16': 'unmark.svg'};
         } else {
-            title = browser.i18n.getMessage('mark.set.label');
+            title = browser.i18n.getMessage('mark_set@label');
             icons = {'16': 'mark.svg'};
         }
 
@@ -169,7 +169,7 @@ if (browser.menus.onShown && browser.menus.onHidden) {
     browser.menus.onHidden.addListener(function () {
         // The menu was hidden.  Revert the MARK item to a generic description.
         browser.menus.update(MID_MARK, {
-            title: browser.i18n.getMessage('mark.label'),
+            title: browser.i18n.getMessage('mark@label'),
             // Bug 1414566 - updating icon not supported.
             //icons: {'16': 'mark.svg'},
         });
