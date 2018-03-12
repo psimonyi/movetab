@@ -144,6 +144,38 @@ browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
     }
 });
 
+// When the context menu is shown, update the MARK item from generic 'toggle'
+// to whether it's set or unset for the context tab.  Revert to the generic
+// description when the menu closes so that it won't show the wrong label if
+// the next onShown takes too long because of async behaviour.
+// Supported since Firefox 60.
+if (browser.menus.onShown && browser.menus.onHidden) {
+    browser.menus.onShown.addListener(function (info, tab) {
+        let title, icons;
+        if (marks.has(tab.id)) {
+            title = browser.i18n.getMessage('mark.unset.label');
+            icons = {'16': 'unmark.svg'};
+        } else {
+            title = browser.i18n.getMessage('mark.set.label');
+            icons = {'16': 'mark.svg'};
+        }
+
+        // Bug 1414566 - updating icon not supported.
+        browser.menus.update(MID_MARK, {title}).then(() => {
+            browser.menus.refresh();
+        });
+    });
+
+    browser.menus.onHidden.addListener(function () {
+        // The menu was hidden.  Revert the MARK item to a generic description.
+        browser.menus.update(MID_MARK, {
+            title: browser.i18n.getMessage('mark.label'),
+            // Bug 1414566 - updating icon not supported.
+            //icons: {'16': 'mark.svg'},
+        });
+    });
+}
+
 browser.menus.onClicked.addListener(function (info, tab) {
     if (info.menuItemId === MID_MARK) {
         // Toggle whether this tab is marked.

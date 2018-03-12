@@ -6,6 +6,8 @@
     "to.window.pattern": {"message": "\"$1\""},
     "before.tab.pattern": {"message": "Before \"$1\""},
     "after.tab.pattern": {"message": "After \"$1\""},
-    "mark.label": {"message": "Toggle Tab Target"},
+    "mark.label": {"message": "Toggle Teleport Target"},
+    "mark.set.label": {"message": "Set as Teleport Target"},
+    "mark.unset.label": {"message": "Remove Teleport Target"},
     "empty": {"message": "JSON is dumb"}
 }
