@@ -218,7 +218,7 @@ function moveTab(tab, destWindowId, destIndex) {
         // Keep this tab as the active tab after the move.
         promise.then(() => {
             browser.tabs.update(tab.id, {active: true});
-            browser.windows.update(windowId, {focused: true});
+            browser.windows.update(destWindowId, {focused: true});
         });
     }
 }
