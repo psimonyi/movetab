@@ -201,7 +201,7 @@ browser.menus.onClicked.addListener(function (info, tab) {
         browser.tabs.get(destTabId).then(destTab => {
             let offset = 1;
             if (destTab.windowId === tab.windowId
-                && tab.index < destTab.index) {
+                && tab.index <= destTab.index) {
                 offset = 0;
             }
             moveTab(tab, destTab.windowId, destTab.index + offset);
