@@ -144,6 +144,22 @@ browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
     }
 });
 
+// When this extension is upgraded, refresh the cache of marked tabs.
+browser.runtime.onInstalled.addListener(async function (details) {
+    if (details.reason == 'update') {
+        let tabs = await browser.tabs.query({});
+        let tabs_targets = await Promise.all(tabs.map(async tab =>
+            [tab, await browser.sessions.getTabValue(tab.id, 'target')]));
+
+        for (let [tab, isTarget] of tabs_targets) {
+            if (isTarget) {
+                setMark(tab);
+            }
+        }
+        makeMenu();
+    }
+});
+
 // When the context menu is shown, update the MARK item from generic 'toggle'
 // to whether it's set or unset for the context tab.  Revert to the generic
 // description when the menu closes so that it won't show the wrong label if
