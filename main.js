@@ -176,7 +176,7 @@ if (browser.menus.onShown && browser.menus.onHidden) {
     });
 }
 
-browser.menus.onClicked.addListener(function (info, tab) {
+browser.menus.onClicked.addListener(async function (info, tab) {
     if (info.menuItemId === MID_MARK) {
         // Toggle whether this tab is marked.
         if (marks.has(tab.id)) {
@@ -188,26 +188,46 @@ browser.menus.onClicked.addListener(function (info, tab) {
     } else if (info.menuItemId === MID_NEW_WINDOW) {
         browser.windows.create({tabId: tab.id});
     } else if (info.menuItemId === 'right') {
+        if (tab.pinned) {
+            await browser.tabs.update(tab.id, {pinned: false});
+        }
         browser.tabs.move(tab.id, {index: -1});
     } else if (info.menuItemId === 'left') {
-        browser.tabs.move(tab.id, {index: 0});
+        if (tab.pinned) {
+            await browser.tabs.update(tab.id, {pinned: false});
+        }
+        let index = await pinnedTabCount(tab.windowId);
+        browser.tabs.move(tab.id, {index});
     } else if (info.menuItemId.startsWith(MID_PREFIX_WINDOW)) {
         const windowId = JSON.parse(
             info.menuItemId.slice(MID_PREFIX_WINDOW.length));
-        moveTab(tab, windowId, -1);
+        let index = -1;
+        if (tab.pinned) {
+            index = await pinnedTabCount(windowId);
+        }
+        moveTab(tab, windowId, index);
     } else if (info.menuItemId.startsWith(MID_PREFIX_TAB)) {
         const destTabId = JSON.parse(
             info.menuItemId.slice(MID_PREFIX_TAB.length));
-        browser.tabs.get(destTabId).then(destTab => {
-            let offset = 1;
-            if (destTab.windowId === tab.windowId
-                && tab.index <= destTab.index) {
-                offset = 0;
-            }
-            moveTab(tab, destTab.windowId, destTab.index + offset);
-        });
+        const destTab = await browser.tabs.get(destTabId);
+        if (tab.pinned != destTab.pinned) {
+            await browser.tabs.update(tab.id, {pinned: destTab.pinned});
+        }
+        let offset = 1;
+        if (destTab.windowId === tab.windowId
+            && tab.index <= destTab.index) {
+            offset = 0;
+        }
+        moveTab(tab, destTab.windowId, destTab.index + offset);
     }
 });
+
+// Since pinned tabs must all be at the start, this is also the index of the
+// first non-pinned tab.
+async function pinnedTabCount(windowId) {
+    let tabs = await browser.tabs.query({windowId, pinned: true});
+    return tabs.length;
+}
 
 function moveTab(tab, destWindowId, destIndex) {
     const promise = browser.tabs.move(tab.id, {
