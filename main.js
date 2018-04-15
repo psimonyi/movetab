@@ -7,6 +7,10 @@
 
 'use strict';
 
+// Since Firefox 60, we can update the menu based on context as it's shown.
+// Before that, we have to work around it by eagerly updating the menu.
+const DYNAMIC_MENU = !!(browser.menus.onShown && browser.menus.onHidden);
+
 const MID_TOP = 'movetab_menu';
 const MID_NEW_WINDOW = 'newwindow';
 const MID_MARK = 'toggle-mark';
@@ -16,8 +20,17 @@ const MID_PREFIX_TAB = 'tab:';
 // Marked tab IDs (marked as "this is a teleport target").
 let marks = new Set();
 
-// Erase and completely rebuild the context menu.
-async function makeMenu() {
+if (DYNAMIC_MENU) makeMenuBase();
+makeMenu();
+
+function makeMenu() {
+    if (DYNAMIC_MENU) return;
+    // Erase and completely rebuild the context menu.
+    makeMenuBase().then(makeMenuRest);
+}
+
+// Build the static starting part of the menu.
+async function makeMenuBase() {
     browser.menus.removeAll();
 
     browser.menus.create({
@@ -36,6 +49,13 @@ async function makeMenu() {
             },
         });
     }
+}
+
+// Build the rest of the menu, assuming we start from makeMenuBase.
+// If contextTab is falsy, we don't know which tab the menu is for, but we do
+// assume it's in the current window.
+async function makeMenuRest(contextTab) {
+    const contextTabId = contextTab && contextTab.id;
 
     // Tabs are in the order they were marked.  It might be better to sort by
     // index though.
@@ -50,6 +70,7 @@ async function makeMenu() {
             id: MID_PREFIX_TAB + JSON.stringify(tab.id),
             parentId: MID_TOP,
             title: browser.i18n.getMessage('after_tab@pattern', tab.title),
+            enabled: contextTabId !== tab.id,
         });
     }
 
@@ -94,26 +115,49 @@ async function makeMenu() {
         type: "separator",
     });
 
+    let title, icons;
+    if (!contextTab) {
+        title = browser.i18n.getMessage('mark@label');
+        icons = {'16': 'mark.svg'};
+    } else if (marks.has(contextTab.id)) {
+        title = browser.i18n.getMessage('mark_unset@label');
+        icons = {'16': 'unmark.svg'};
+    } else {
+        title = browser.i18n.getMessage('mark_set@label');
+        icons = {'16': 'mark.svg'};
+    }
     browser.menus.create({
         id: MID_MARK,
         parentId: MID_TOP,
-        title: browser.i18n.getMessage('mark@label'),
-        icons: {
-            "16": 'mark.svg',
-        },
+        title,
+        icons,
     });
+    // Note bug 1414566 - menus.update can't update the icon.
 }
 
-makeMenu();
+// Since Firefox 60, we can update the menu based on context as it's shown.
+// When it's hidden, we revert to a basic starting menu, just in case it's
+// shown briefly due to async effects (but since all the changes take place in
+// a submenu and onShown/onHidden fire for the top-level context menu, the only
+// really important part is that we create the submenu).
+if (DYNAMIC_MENU) {
+    browser.menus.onShown.addListener(async function (info, tab) {
+        await makeMenuRest(tab);
+        browser.menus.refresh();
+    });
 
-// When you open the tab context menu, our movement options depend on which
-// window the tab is in.  The WebExtensions API won't let us build up the
-// appropriate options at menu-showing time, so we have to rebuild the menu
-// every time the window focus changes.
-browser.windows.onFocusChanged.addListener(function (windowId) {
-    if (windowId === browser.windows.WINDOW_ID_NONE) return;
-    makeMenu();
-});
+    browser.menus.onHidden.addListener(function () {
+        makeMenuBase();
+    });
+} else {
+    // Before Fx60 (!DYNAMIC_MENU), the menu has to be rebuilt when window
+    // focus changes because the movement options depend on which one is the
+    // active window.
+    browser.windows.onFocusChanged.addListener(function (windowId) {
+        if (windowId === browser.windows.WINDOW_ID_NONE) return;
+        makeMenu();
+    });
+}
 
 // When tabs are closed, remove them from our cache of marks.  The mark can be
 // restored if the tab is reopened.
@@ -170,38 +214,6 @@ browser.runtime.onInstalled.addListener(async function (details) {
         makeMenu();
     }
 });
-
-// When the context menu is shown, update the MARK item from generic 'toggle'
-// to whether it's set or unset for the context tab.  Revert to the generic
-// description when the menu closes so that it won't show the wrong label if
-// the next onShown takes too long because of async behaviour.
-// Supported since Firefox 60.
-if (browser.menus.onShown && browser.menus.onHidden) {
-    browser.menus.onShown.addListener(function (info, tab) {
-        let title, icons;
-        if (marks.has(tab.id)) {
-            title = browser.i18n.getMessage('mark_unset@label');
-            icons = {'16': 'unmark.svg'};
-        } else {
-            title = browser.i18n.getMessage('mark_set@label');
-            icons = {'16': 'mark.svg'};
-        }
-
-        // Bug 1414566 - updating icon not supported.
-        browser.menus.update(MID_MARK, {title}).then(() => {
-            browser.menus.refresh();
-        });
-    });
-
-    browser.menus.onHidden.addListener(function () {
-        // The menu was hidden.  Revert the MARK item to a generic description.
-        browser.menus.update(MID_MARK, {
-            title: browser.i18n.getMessage('mark@label'),
-            // Bug 1414566 - updating icon not supported.
-            //icons: {'16': 'mark.svg'},
-        });
-    });
-}
 
 browser.menus.onClicked.addListener(async function (info, tab) {
     if (info.menuItemId === MID_MARK) {
