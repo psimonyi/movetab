@@ -20,18 +20,33 @@ const MID_PREFIX_TAB = 'tab:';
 // Marked tab IDs (marked as "this is a teleport target").
 let marks = new Set();
 
+let menu_state = '';
 if (DYNAMIC_MENU) makeMenuBase();
 makeMenu();
 
 function makeMenu() {
     if (DYNAMIC_MENU) return;
+
+    if (menu_state === 'building' || menu_state === 'needs_redo') {
+        menu_state = 'needs_redo';
+        return;
+    }
+
     // Erase and completely rebuild the context menu.
-    makeMenuBase().then(makeMenuRest);
+    menu_state = 'building';
+    makeMenuBase().then(makeMenuRest).then(() => {
+        if (menu_state !== 'building') {
+            menu_state = 'redo';
+            makeMenu();
+        } else {
+            menu_state = 'done';
+        }
+    });
 }
 
 // Build the static starting part of the menu.
 async function makeMenuBase() {
-    browser.menus.removeAll();
+    await browser.menus.removeAll();
 
     browser.menus.create({
         id: MID_TOP,
