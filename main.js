@@ -133,10 +133,21 @@ browser.tabs.onCreated.addListener(async function (tab) {
     }
 });
 
-// Keep the mark visible when the tab's title changes (e.g. because the user
-// navigated or the page updated it itself).  Also keep the menu up to date.
+// Since marking tabs happens in content (as a hack around the WebExtensions
+// API not providing a real way to do it), we have to re-do it sometimes:
+// - when the tab's title changes (e.g. the page updated itself, or the user
+//   navigated somewhere)
+// - when the tab is restored after being unloaded (because if the tab was
+//   marked while unloaded, the script won't have run)
+// Running addMark.js is idempotent, so it's okay if we are over-eager with it.
+// Also the menu item needs to be updated, of course.
 browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
-    if (marks.has(tabId) && 'title' in updates) {
+    // When loading an unloaded tab, the sequence of events is strange.  The
+    // 'url' reported is still 'about:blank' when 'discarded' changes to false,
+    // and we can't run content scripts yet.  So listen for 'url' changes too.
+    if (marks.has(tabId) && ('title' in updates
+                          || 'discarded' in updates
+                          || 'url' in updates)) {
         browser.tabs.executeScript(tab.id,
             {file: 'addMark.js', runAt: 'document_start'});
         browser.menus.update(MID_PREFIX_TAB + JSON.stringify(tab.id),
