@@ -2,7 +2,7 @@
     "applications": {
         "gecko": {
             "id": "movetab@ns.petersimonyi.ca",
-            "strict_min_version": "56.0"
+            "strict_min_version": "60.0a1"
         }
     },
 

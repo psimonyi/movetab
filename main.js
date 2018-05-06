@@ -7,10 +7,6 @@
 
 'use strict';
 
-// Since Firefox 60, we can update the menu based on context as it's shown.
-// Before that, we have to work around it by eagerly updating the menu.
-const DYNAMIC_MENU = !!(browser.menus.onShown && browser.menus.onHidden);
-
 const MID_TOP = 'movetab_menu';
 const MID_NEW_WINDOW = 'newwindow';
 const MID_MARK = 'toggle-mark';
@@ -21,32 +17,18 @@ const MID_PREFIX_TAB = 'tab:';
 let marks = new Set();
 
 let menu_state = '';
-if (DYNAMIC_MENU) makeMenuBase();
-makeMenu();
+makeMenuBase();
 
-function makeMenu() {
-    if (DYNAMIC_MENU) return;
-
-    if (menu_state === 'building' || menu_state === 'needs_redo') {
-        menu_state = 'needs_redo';
+// Clear the menu and fill it with the static part that's always there.  This
+// is the state when the menu is not being shown yet, so that if the
+// dynamically updated part is late, the user still sees the submenu arrow.
+function makeMenuBase() {
+    if (menu_state === 'building') {
+        menu_state = 'want-base';
         return;
     }
 
-    // Erase and completely rebuild the context menu.
-    menu_state = 'building';
-    makeMenuBase().then(makeMenuRest).then(() => {
-        if (menu_state !== 'building') {
-            menu_state = 'redo';
-            makeMenu();
-        } else {
-            menu_state = 'done';
-        }
-    });
-}
-
-// Build the static starting part of the menu.
-async function makeMenuBase() {
-    await browser.menus.removeAll();
+    browser.menus.removeAll();
 
     browser.menus.create({
         id: MID_TOP,
@@ -64,13 +46,18 @@ async function makeMenuBase() {
             },
         });
     }
+
+    menu_state = 'base';
 }
 
 // Build the rest of the menu, assuming we start from makeMenuBase.
-// If contextTab is falsy, we don't know which tab the menu is for, but we do
-// assume it's in the current window.
 async function makeMenuRest(contextTab) {
-    const contextTabId = contextTab && contextTab.id;
+    if (menu_state === 'building') {
+        menu_state = 'want-full';
+        return;
+    }
+    if (menu_state !== 'base') makeMenuBase();
+    menu_state = 'building';
 
     // Tabs are in the order they were marked.  It might be better to sort by
     // index though.
@@ -85,7 +72,7 @@ async function makeMenuRest(contextTab) {
             id: MID_PREFIX_TAB + JSON.stringify(tab.id),
             parentId: MID_TOP,
             title: browser.i18n.getMessage('after_tab@pattern', tab.title),
-            enabled: contextTabId !== tab.id,
+            enabled: contextTab.id !== tab.id,
         });
     }
 
@@ -131,10 +118,7 @@ async function makeMenuRest(contextTab) {
     });
 
     let title, icons;
-    if (!contextTab) {
-        title = browser.i18n.getMessage('mark@label');
-        icons = {'16': 'mark.svg'};
-    } else if (marks.has(contextTab.id)) {
+    if (marks.has(contextTab.id)) {
         title = browser.i18n.getMessage('mark_unset@label');
         icons = {'16': 'unmark.svg'};
     } else {
@@ -148,38 +132,29 @@ async function makeMenuRest(contextTab) {
         icons,
     });
     // Note bug 1414566 - menus.update can't update the icon.
-}
 
-// Since Firefox 60, we can update the menu based on context as it's shown.
-// When it's hidden, we revert to a basic starting menu, just in case it's
-// shown briefly due to async effects (but since all the changes take place in
-// a submenu and onShown/onHidden fire for the top-level context menu, the only
-// really important part is that we create the submenu).
-if (DYNAMIC_MENU) {
-    browser.menus.onShown.addListener(async function (info, tab) {
-        await makeMenuRest(tab);
-        browser.menus.refresh();
-    });
-
-    browser.menus.onHidden.addListener(function () {
+    if (menu_state === 'want-base') {
         makeMenuBase();
-    });
-} else {
-    // Before Fx60 (!DYNAMIC_MENU), the menu has to be rebuilt when window
-    // focus changes because the movement options depend on which one is the
-    // active window.
-    browser.windows.onFocusChanged.addListener(function (windowId) {
-        if (windowId === browser.windows.WINDOW_ID_NONE) return;
-        makeMenu();
-    });
+    } else if (menu_state !== 'building') {
+        makeMenuRest(contextTab);
+    } else {
+        menu_state = 'full';
+    }
 }
+
+browser.menus.onShown.addListener(async function (info, tab) {
+    await makeMenuRest(tab);
+    browser.menus.refresh();
+});
+
+// When the menu is hidden, clear it back to a stub ready for the next onShown.
+browser.menus.onHidden.addListener(makeMenuBase);
 
 // When tabs are closed, remove them from our cache of marks.  The mark can be
 // restored if the tab is reopened.
 browser.tabs.onRemoved.addListener(function (tabId) {
     if (marks.has(tabId)) {
         marks.delete(tabId);
-        makeMenu();
     }
 });
 
@@ -188,7 +163,6 @@ browser.tabs.onCreated.addListener(async function (tab) {
     const isTarget = await browser.sessions.getTabValue(tab.id, 'target');
     if (isTarget) {
         setMark(tab);
-        makeMenu();
     }
 });
 
@@ -226,7 +200,6 @@ browser.runtime.onInstalled.addListener(async function (details) {
                 setMark(tab);
             }
         }
-        makeMenu();
     }
 });
 
@@ -238,7 +211,6 @@ browser.menus.onClicked.addListener(async function (info, tab) {
         } else {
             setMark(tab);
         }
-        makeMenu();
     } else if (info.menuItemId === MID_NEW_WINDOW) {
         browser.windows.create({tabId: tab.id});
     } else if (info.menuItemId === 'right') {
