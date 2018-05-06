@@ -1,0 +1,23 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+:root > * {
+    /* Try to match the font size of the rest of the addon page */
+    font-size: 1.25rem;
+}
+
+div.label {
+    line-height: 1.8;
+}
+
+div.label:not(:first-child) {
+    margin-top: .9em;
+}
+
+div.browser-style {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    line-height: 1.8;
+    margin-bottom: 0;
+}

@@ -13,8 +13,21 @@ const MID_MARK = 'toggle-mark';
 const MID_PREFIX_WINDOW = 'window:';
 const MID_PREFIX_TAB = 'tab:';
 
+const DEFAULT_PREFS = {
+    move: 'after',
+};
+
 // Marked tab IDs (marked as "this is a teleport target").
 let marks = new Set();
+
+// options.js reads prefs from here (so as to get the same defaults).
+var prefs = DEFAULT_PREFS;
+browser.storage.sync.get().then(loaded => Object.assign(prefs, loaded));
+browser.storage.onChanged.addListener(changes => {
+    for (let key of Object.keys(changes)) {
+        prefs[key] = changes[key].newValue;
+    }
+});
 
 let menu_state = '';
 makeMenuBase();
@@ -67,11 +80,13 @@ async function makeMenuRest(contextTab) {
     const currentWin = windows.find(win => win.focused);
     if (!currentWin) return; // Eh, can't right-click until there's a window.
 
+    let to_tab_pattern = `${prefs.move}_tab@pattern`;
+
     for (let tab of markedTabs) if (tab.windowId === currentWin.id) {
         browser.menus.create({
             id: MID_PREFIX_TAB + JSON.stringify(tab.id),
             parentId: MID_TOP,
-            title: browser.i18n.getMessage('after_tab@pattern', tab.title),
+            title: browser.i18n.getMessage(to_tab_pattern, tab.title),
             enabled: contextTab.id !== tab.id,
         });
     }
@@ -98,7 +113,7 @@ async function makeMenuRest(contextTab) {
             browser.menus.create({
                 id: MID_PREFIX_TAB + JSON.stringify(tab.id),
                 parentId: MID_TOP,
-                title: browser.i18n.getMessage('after_tab@pattern', tab.title),
+                title: browser.i18n.getMessage(to_tab_pattern, tab.title),
             });
         }
     }
@@ -183,8 +198,9 @@ browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
                           || 'url' in updates)) {
         browser.tabs.executeScript(tab.id,
             {file: 'addMark.js', runAt: 'document_start'});
+        let to_tab_pattern = `${prefs.move}_tab@pattern`;
         browser.menus.update(MID_PREFIX_TAB + JSON.stringify(tab.id),
-            {title: browser.i18n.getMessage('after_tab@pattern', tab.title)});
+            {title: browser.i18n.getMessage(to_tab_pattern, tab.title)});
     }
 });
 
@@ -239,10 +255,12 @@ browser.menus.onClicked.addListener(async function (info, tab) {
         if (tab.pinned != destTab.pinned) {
             await browser.tabs.update(tab.id, {pinned: destTab.pinned});
         }
-        let offset = 1;
-        if (destTab.windowId === tab.windowId
-            && tab.index <= destTab.index) {
-            offset = 0;
+
+        // We know tab is not destTab because the menu item's disabled then.
+        let offset = prefs.move === 'after' ? 1 : 0;
+        if (tab.windowId === destTab.windowId
+            && tab.index < destTab.index) {
+            offset -= 1;
         }
         moveTab(tab, destTab.windowId, destTab.index + offset);
     }
