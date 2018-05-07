@@ -10,10 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let elem = document.getElementById(`move-${prefs.move}`);
         elem.checked = true;
     }
+    if (prefs.active) {
+        let elem = document.getElementById(`active-${prefs.active}`);
+        elem.checked = true;
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    for (let pref of ['move']) {
+    for (let pref of ['move', 'active']) {
         let elems = document.querySelectorAll(`input[name=${pref}]`);
         for (let elem of elems) {
             elem.addEventListener('change', () => {

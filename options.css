@@ -3,16 +3,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 :root > * {
-    /* Try to match the font size of the rest of the addon page */
+    /* Try to match the font on the rest of the addon page */
     font-size: 1.25rem;
+    color: #333;
 }
 
-div.label {
+.label {
     line-height: 1.8;
 }
 
-div.label:not(:first-child) {
+.label:not(:first-child) {
     margin-top: .9em;
+}
+
+.label.helper {
+    color: #737373; /* Firefox Grey 50 (Photon "secondary color") */
+    font-size: calc(1em / 1.15);
 }
 
 div.browser-style {

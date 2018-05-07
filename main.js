@@ -15,6 +15,7 @@ const MID_PREFIX_TAB = 'tab:';
 
 const DEFAULT_PREFS = {
     move: 'after',
+    active: 'keep',
 };
 
 // Marked tab IDs (marked as "this is a teleport target").
@@ -233,13 +234,13 @@ browser.menus.onClicked.addListener(async function (info, tab) {
         if (tab.pinned) {
             await browser.tabs.update(tab.id, {pinned: false});
         }
-        browser.tabs.move(tab.id, {index: -1});
+        moveTab(tab, tab.windowId, -1);
     } else if (info.menuItemId === 'left') {
         if (tab.pinned) {
             await browser.tabs.update(tab.id, {pinned: false});
         }
         let index = await pinnedTabCount(tab.windowId);
-        browser.tabs.move(tab.id, {index});
+        moveTab(tab, tab.windowId, index);
     } else if (info.menuItemId.startsWith(MID_PREFIX_WINDOW)) {
         const windowId = JSON.parse(
             info.menuItemId.slice(MID_PREFIX_WINDOW.length));
@@ -273,18 +274,67 @@ async function pinnedTabCount(windowId) {
     return tabs.length;
 }
 
-function moveTab(tab, destWindowId, destIndex) {
-    const promise = browser.tabs.move(tab.id, {
+async function moveTab(tab, destWindowId, destIndex) {
+    if (tab.active && prefs.active === 'next') {
+        // Activate the next tab before doing the move to avoid unnecessary
+        // tabbox scrolling.
+        let nextTab = await pickNextTab(tab);
+        await browser.tabs.update(nextTab.id, {active: true});
+    }
+
+    await browser.tabs.move(tab.id, {
         windowId: destWindowId,
         index: destIndex
     });
-    if (tab.active) {
-        // Keep this tab as the active tab after the move.
-        promise.then(() => {
-            browser.tabs.update(tab.id, {active: true});
-            browser.windows.update(destWindowId, {focused: true});
-        });
+
+    if (tab.active && prefs.active === 'keep') {
+        browser.tabs.update(tab.id, {active: true});
+        browser.windows.update(destWindowId, {focused: true});
     }
+}
+
+// Choose which tab to select next when prefs.active === 'next'.
+// Return the tab object.
+async function pickNextTab(tab) {
+    // Try the adjacent undiscarded tabs of the same pinnedness, preferring the
+    // one to the right.
+    let right = await findTab({
+        windowId: tab.windowId,
+        index: tab.index + 1,
+        pinned: tab.pinned,
+    });
+    if (right && !right.discarded) return right;
+
+    let left = await findTab({
+        windowId: tab.windowId,
+        index: tab.index - 1,
+        pinned: tab.pinned,
+    });
+    if (left && !left.discarded) return left;
+
+    // Give up on the 'undiscarded' criterion, again preferring the right.
+    if (right) return right;
+    if (left) return left;
+
+    // This tab is the last tab of the same pinnedness in its window, so go for
+    // the adjacent tab of the other pinnedness.  If this is the only
+    // pinned tab, then it must be index 0 and the adjacent non-pinned tab is
+    // index 1.  If this is the only non-pinned tab, the adjacent pinned tab is
+    // the rightmost pinned tab, which comes immediately before this tab.
+    let next = await findTab({
+        windowId: tab.windowId,
+        index: tab.pinned ? 1 : tab.index - 1,
+    });
+    if (next) return next;
+
+    // I guess that means this is the only tab in the window, so just stick
+    // with the orignal tab.
+    return tab;
+}
+
+async function findTab(queryInfo) {
+    let result = await browser.tabs.query(queryInfo);
+    return result.length ? result[0] : null;
 }
 
 function setMark(tab) {
