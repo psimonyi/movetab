@@ -73,10 +73,9 @@ async function makeMenuRest(contextTab) {
     if (menu_state !== 'base') makeMenuBase();
     menu_state = 'building';
 
-    // Tabs are in the order they were marked.  It might be better to sort by
-    // index though.
-    const markedTabs = await Promise.all(Array.from(marks.values())
-                                         .map(id => browser.tabs.get(id)));
+    let markedTabs = await Promise.all(Array.from(marks.values())
+                                       .map(id => browser.tabs.get(id)));
+    markedTabs.sort((a, b) => a.index - b.index);
     const windows = await browser.windows.getAll({windowTypes: ['normal']});
     const currentWin = windows.find(win => win.focused);
     if (!currentWin) return; // Eh, can't right-click until there's a window.
