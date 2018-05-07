@@ -80,13 +80,11 @@ async function makeMenuRest(contextTab) {
     const currentWin = windows.find(win => win.focused);
     if (!currentWin) return; // Eh, can't right-click until there's a window.
 
-    let to_tab_pattern = `${prefs.move}_tab@pattern`;
-
     for (let tab of markedTabs) if (tab.windowId === currentWin.id) {
         browser.menus.create({
             id: MID_PREFIX_TAB + JSON.stringify(tab.id),
             parentId: MID_TOP,
-            title: browser.i18n.getMessage(to_tab_pattern, tab.title),
+            title: menuLabelToTab(tab.title),
             enabled: contextTab.id !== tab.id,
         });
     }
@@ -113,7 +111,7 @@ async function makeMenuRest(contextTab) {
             browser.menus.create({
                 id: MID_PREFIX_TAB + JSON.stringify(tab.id),
                 parentId: MID_TOP,
-                title: browser.i18n.getMessage(to_tab_pattern, tab.title),
+                title: menuLabelToTab(tab.title),
             });
         }
     }
@@ -157,6 +155,23 @@ async function makeMenuRest(contextTab) {
     }
 }
 
+function menuLabelToTab(title) {
+    // The actual maximum length depends on the display width, which we don't
+    // know.  Instead, a reasonable guess (at least for English) seems to be
+    // somewhere around 50-80 characters.  Firefox does this too in
+    // gMenuBuilder.customizeElement.
+    const lenMax = 64;
+    const ellipsis = '\u2026'; // Ideally we'd get the pref intl.ellipsis.
+    let to_tab_pattern = `${prefs.move}_tab@pattern`;
+    let lenFixed = browser.i18n.getMessage(to_tab_pattern, '').length;
+    let lenAvailable = lenMax - lenFixed;
+    if (title.length <= lenAvailable) {
+        return browser.i18n.getMessage(to_tab_pattern, title);
+    }
+    return browser.i18n.getMessage(to_tab_pattern,
+        title.substr(0, lenAvailable - ellipsis.length) + ellipsis);
+}
+
 browser.menus.onShown.addListener(async function (info, tab) {
     await makeMenuRest(tab);
     browser.menus.refresh();
@@ -198,9 +213,8 @@ browser.tabs.onUpdated.addListener(function (tabId, updates, tab) {
                           || 'url' in updates)) {
         browser.tabs.executeScript(tab.id,
             {file: 'addMark.js', runAt: 'document_start'});
-        let to_tab_pattern = `${prefs.move}_tab@pattern`;
         browser.menus.update(MID_PREFIX_TAB + JSON.stringify(tab.id),
-            {title: browser.i18n.getMessage(to_tab_pattern, tab.title)});
+            {title: menuLabelToTab(tab.title)});
     }
 });
 
