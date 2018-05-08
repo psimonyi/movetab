@@ -4,6 +4,10 @@
 
 @import url('chrome://global/skin/in-content/common.css');
 
+:root {
+    -moz-user-select: none;
+}
+
 :root > * {
     /* Try to match the font on the rest of the addon page */
     font-size: 1.25rem;
