@@ -2,28 +2,63 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+@import url('chrome://global/skin/in-content/common.css');
+
 :root > * {
     /* Try to match the font on the rest of the addon page */
     font-size: 1.25rem;
     color: #333;
-}
-
-.label {
     line-height: 1.8;
 }
 
-.label:not(:first-child) {
+.section-start:not(:first-child) {
     margin-top: .9em;
 }
 
-.label.helper {
+.helper {
     color: #737373; /* Firefox Grey 50 (Photon "secondary color") */
     font-size: calc(1em / 1.15);
 }
 
-div.browser-style {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    line-height: 1.8;
-    margin-bottom: 0;
+span.helper:not(:first-child) {
+    margin-inline-start: 1ch;
+}
+
+/* in-content/common.css rules for XUL radio buttons, converted for HTML */
+
+/*xul|radio*/
+input[type="radio"] {
+  margin-inline-start: 0;
+  -moz-appearance: none;
+}
+
+/*xul|*.radio-check*/
+input[type="radio"] {
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--in-content-box-border-color);
+  border-radius: 50%;
+  margin: 0;
+  margin-inline-end: 10px;
+  background-color: #f1f1f1;
+  background-image: linear-gradient(#fff, rgba(255,255,255,0.80));
+  box-shadow: 0 1px 1px 0 #fff, inset 0 2px 0 0 rgba(0,0,0,0.03);
+}
+
+/*xul|radio:not([disabled="true"]):hover > xul|*.radio-check*/
+input[type="radio"]:not(:disabled):hover {
+  border-color: var(--in-content-border-focus);
+}
+
+/*xul|*.radio-check[selected]*/
+input[type="radio"]:checked {
+  background-image: url("chrome://global/skin/in-content/radio.svg"), linear-gradient(#fff, rgba(255,255,255,0.8));
+  -moz-context-properties: fill;
+  fill: #2292d0;
+}
+
+/*xul|radio[disabled="true"] > xul|*.radio-check*/
+input[type="radio"]:disabled {
+  opacity: 0.5;
 }

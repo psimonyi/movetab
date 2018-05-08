@@ -6,25 +6,27 @@
 <link rel='stylesheet' href='options.css'>
 <script src='options.js'></script>
 
-<div class='label'>Offer to move tabs</div>
+<div class='section-start'>Offer to move tabs</div>
 
-<div class='browser-style'>
+<div class='toggle-container-with-text'>
     <input  id='move-before' type='radio' name='move' value='before'/>
     <label for='move-before'>before the target tab</label>
 </div>
-<div class='browser-style'>
+<div class='toggle-container-with-text'>
     <input  id='move-after' type='radio' name='move' value='after'/>
     <label for='move-after'>after the target tab</label>
 </div>
 
-<div class='label'>When moving the active tab</div>
+<div class='section-start'>When moving the active tab</div>
 
-<div class='browser-style'>
+<div class='toggle-container-with-text'>
     <input  id='active-keep' type='radio' name='active' value='keep'/>
+    <span>
     <label for='active-keep'>follow that tab</label>
-    <span class='label helper'>(it stays active)</label>
+    <span class='helper'>(it stays active)</label>
+    </span>
 </div>
-<div class='browser-style'>
+<div class='toggle-container-with-text'>
     <input  id='active-next' type='radio' name='active' value='next'/>
     <label for='active-next'>select an adjacent tab</label>
 </div>

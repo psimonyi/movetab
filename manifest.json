@@ -31,7 +31,7 @@
     "name": "Tab Teleporter",
 
     "options_ui": {
-        "browser_style": true,
+        "browser_style": false,
         "page": "options.html"
     },
 
