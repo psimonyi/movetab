@@ -1,10 +1,9 @@
 Dragging tabs around can be a drag.  Move tabs with the context menu instead.
 
-<b>Features:</b>
 <ul>
+<li>Mark a tab as a target, then move tabs beside it
 <li>Move to the left/right end of the tab strip
 <li>Move to an existing window or create a new one
-<li>Mark a destination tab, then move tabs beside it
 </ul>
 
 <b>Permissions and privacy:</b>
