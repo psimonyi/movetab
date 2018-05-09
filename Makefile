@@ -6,8 +6,9 @@
 default: movetab.xpi
 
 files := addMark.js left.svg main.js manifest.json mark.svg movetab-16.svg \
-    movetab-32.svg movetab-48.svg photon-window-16.svg \
-    photon-window-new-16.svg removeMark.js right.svg unmark.svg _locales
+    movetab-32.svg movetab-48.svg options.css options.html options.js \
+    photon-window-16.svg photon-window-new-16.svg removeMark.js right.svg \
+    unmark.svg _locales
 
 movetab.xpi: $(files)
 	zip --filesync --quiet --recurse-paths $@ $^
